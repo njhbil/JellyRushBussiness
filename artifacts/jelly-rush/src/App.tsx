@@ -182,15 +182,16 @@ function ProfileScreen({ onContinue, onBack }: { onContinue: (name: string, bran
 }
 
 function BriefingScreen({ name, onStart, onBack }: { name: string; onStart: () => void; onBack: () => void }) {
-  const cards = [
-    { icon: Store, title: `Halo ${name}, kamu manajernya sekarang`, text: 'Pabrik jelly kecil ini punya modal Rp10 juta, 5 orang tim, dan gudang berisi 100 cup. Setiap level kasih kamu satu kasus nyata: pesanan, pemasok telat, sampai pasar yang tiba-tiba panas.' },
-    { icon: Target, title: 'Tugasmu di tiap level', text: 'Baca kartu kasusnya, pilih satu keputusan (boleh gonta-ganti), tulis langkah aksimu dengan kata-katamu sendiri, baru tekan submit. Belum submit = belum terkunci.' },
-    { icon: Medal, title: 'Naik level kalau tantangannya tembus', text: 'Ada 5 level. Selesaikan level 1 buat buka level 2, begitu seterusnya. Kamu bisa kembali ke level sebelumnya kapan pun lewat peta level.' },
-  ];
-  return <main className="game-shell min-h-[100dvh] px-5 py-6 sm:px-10 lg:px-14"><div className="mx-auto max-w-5xl"><header className="flex items-center justify-between"><LogoMark /><span className="label">Langkah 2 dari 3 · pengarahan</span></header>
-    <div className="py-10"><span className="label eyebrow">Pengarahan sebelum masuk lantai</span><h1 className="ink mt-3 max-w-2xl font-display text-4xl font-bold tracking-[-.06em] sm:text-5xl">Kerjanya simpel: baca kasus, pilih, tulis aksi, submit.</h1></div>
-    <div className="grid gap-4 md:grid-cols-3">{cards.map((card, i) => { const Icon = card.icon; return <div key={card.title} className="card-in surface rounded-3xl p-6" style={{ animationDelay: `${i * .14}s` }}><div className="mb-4 grid h-11 w-11 place-items-center rounded-xl border-2 border-[var(--ink)] bg-[var(--yellow)]"><Icon className="h-5 w-5" /></div><div className="label mb-2">Kartu {i + 1}</div><h2 className="ink font-display text-xl font-bold leading-tight">{card.title}</h2><p className="muted-ink mt-2 text-sm leading-relaxed">{card.text}</p></div>; })}</div>
-    <div className="mt-8 flex flex-wrap items-center gap-3"><button onClick={onStart} data-testid="button-start-level-1" className="button-yellow group inline-flex items-center gap-3 rounded-2xl border-2 px-6 py-4 font-display text-base font-bold transition-transform hover:-translate-y-1">Masuk Level 1 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" /></button><BackButton onClick={onBack} label="Kembali ke identitas" /></div>
+  const steps = ['Baca kasus', 'Pilih + tulis aksi', 'Submit, naik level'];
+  return <main className="game-shell min-h-[100dvh] px-5 py-6 sm:px-10 lg:px-14"><div className="mx-auto max-w-3xl"><header className="flex items-center justify-between"><LogoMark /></header>
+    <div className="card-in surface mx-auto mt-10 max-w-2xl rounded-[32px] p-8 text-center sm:p-10">
+      <div className="mx-auto w-fit"><JellyMascot mood="happy" /></div>
+      <h1 className="ink mt-6 font-display text-4xl font-bold tracking-[-.06em] sm:text-5xl">Halo {name}.</h1>
+      <p className="muted-ink mx-auto mt-3 max-w-md text-base leading-relaxed">Kamu manajer pabrik jelly ini sekarang. Modal Rp10 juta, 5 orang tim, 100 cup di gudang. Jangan dihabiskan buat jajan ya.</p>
+      <div className="mt-6 flex flex-wrap items-center justify-center gap-2">{steps.map((s, i) => <span key={s} className="tag">{i + 1} · {s}</span>)}</div>
+      <button onClick={onStart} data-testid="button-start-level-1" className="button-yellow group mt-8 inline-flex items-center gap-3 rounded-2xl border-2 px-8 py-4 font-display text-base font-bold transition-transform hover:-translate-y-1">Masuk Level 1 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" /></button>
+      <div className="mt-4"><button onClick={onBack} className="muted-ink text-sm font-semibold hover:text-[var(--blue)]">← Kembali</button></div>
+    </div>
   </div></main>;
 }
 
@@ -201,14 +202,14 @@ function TopBar({ cash, name, brand, onRestart, onBack }: { round: Round; cash: 
 function LevelMap({ current, logs, onJump }: { current: Round; logs: RoundLog[]; onJump: (round: Round) => void }) {
   const done = new Set(logs.map((l) => l.round));
   const maxUnlocked = (logs.length > 0 ? Math.max(...logs.map((l) => l.round)) + 1 : 1) as number;
-  return <div className="mb-8"><div className="label mb-3">Peta level · klik level yang sudah terbuka buat kembali</div><div className="grid grid-cols-2 gap-2 sm:grid-cols-5">{([1, 2, 3, 4, 5] as Round[]).map((level) => {
+  return <div className="mb-8"><div className="grid grid-cols-2 gap-2 sm:grid-cols-5">{([1, 2, 3, 4, 5] as Round[]).map((level) => {
     const isDone = done.has(level);
     const isCurrent = level === current;
     const locked = level > Math.min(5, Math.max(current, maxUnlocked));
     return <button key={level} disabled={locked} onClick={() => onJump(level)} className={`rounded-2xl border p-3 text-left transition ${isCurrent ? 'border-[var(--blue)] bg-[#f4f9ff] shadow-[0_0_0_4px_rgba(33,100,216,.13)]' : isDone ? 'border-[#49b9aa] bg-[#eefcf9]' : locked ? 'cursor-not-allowed border-[var(--line)] bg-[#f2f6fa] opacity-60' : 'border-[var(--line)] bg-white hover:-translate-y-0.5'}`}>
       <div className="flex items-center justify-between"><span className="font-display text-lg font-bold">{isDone && !isCurrent ? <Check className="h-5 w-5 text-[#178e83]" /> : `0${level}`}</span>{locked && <LockKeyhole className="h-4 w-4 text-[#91a3bc]" />}</div>
       <div className="ink mt-1 text-[13px] font-bold leading-tight">{roundInfo[level].title}</div>
-      <div className="label mt-1">{locked ? 'Terkunci' : isCurrent ? 'Posisi kamu' : isDone ? 'Selesai · klik buat ulangi' : 'Terbuka'}</div>
+      <div className="label mt-1">{locked ? 'Terkunci' : isCurrent ? 'Kamu di sini' : isDone ? 'Selesai' : 'Buka'}</div>
     </button>;
   })}</div></div>;
 }
@@ -224,7 +225,6 @@ function DecisionCard({ option, selected, disabled, onChoose }: { option: Option
   return <button data-testid={`button-decision-${option.id}`} disabled={disabled} onClick={onChoose} aria-pressed={selected} className={`decision-card group relative flex h-full flex-col rounded-2xl border-2 p-5 text-left ${selected ? 'is-selected' : ''}`}>
     {option.tag && <span className="absolute -top-3 right-4 rounded-full border-2 border-[var(--ink)] bg-[var(--yellow)] px-2 py-1 text-[11px] font-bold text-[var(--ink)]">{option.tag}</span>}
     <div className="mb-5 flex items-start justify-between"><div className="grid h-11 w-11 place-items-center rounded-xl border-2 border-[var(--ink)]" style={{ background: style.bg, color: style.icon }}><Icon className="h-5 w-5" /></div><ChevronRight className={`h-5 w-5 text-[#8aa0bc] transition-transform ${selected ? 'rotate-90 text-[var(--blue)]' : 'group-hover:translate-x-1 group-hover:text-[var(--blue)]'}`} /></div><div className="text-[12.5px] font-bold" style={{ color: style.bg === 'var(--yellow)' ? '#9b7000' : style.bg }}>{option.eyebrow}</div><h3 className="decision-title mt-2 font-display text-xl font-bold leading-tight">{option.title}</h3><p className="decision-description mt-2 flex-1 text-sm leading-relaxed">{option.description}</p><div className="decision-rule mt-5 grid grid-cols-2 gap-2 border-t pt-4 text-[12px]"><span className="muted-ink">Investasi <strong className="ml-1 ink">{rupiah(option.cost)}</strong></span><span className="muted-ink text-right">Potensi <strong className="ml-1 mint">+{rupiah(option.profit)}</strong></span></div>
-    {selected && <div className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-bold text-[var(--blue)]"><Check className="h-4 w-4" /> Dipilih sementara · bisa diganti sebelum submit</div>}
   </button>;
 }
 
@@ -303,24 +303,41 @@ function GameScreen({ name, brand, onFinish, onRestart, onExitToBriefing }: { na
     else onExitToBriefing();
   };
 
-  const mascotMessage = lastLog?.challenge.success ? (lastLog.streakAfter >= 3 ? 'Mantap! Medali efisiensi masuk.' : 'Mantap! Tantangan level tembus.') : lastLog ? 'Belajar juga bagian dari menang.' : selected ? 'Oke, itu pilihanmu. Masih bisa diganti.' : 'Pilih langkah yang membuat pabrik bergerak.';
+  const roast: Record<string, string> = {
+    '1-steady': 'Wah, rapi juga. Nyaris kayak manajer beneran.',
+    '1-stock': 'Spekulasi di ronde satu? Berani. Dompetnya belum tentu setuju.',
+    '2-shift': 'Lembur diambil, festival selamat. Timmu layak ditraktir.',
+    '2-bulk': 'Kulakan banyak, otak jalan. Semoga gudangnya muat.',
+    '2-outsource': 'Numpang pabrik tetangga… margin ikut numpang lewat juga.',
+    '2-reject': 'Order 1000 cup ditolak? Festivalnya bahkan nggak tahu kamu ada.',
+    '3-wait': 'Setia menunggu… pelangganmu juga menunggu. Sama-sama menunggu.',
+    '3-backup': 'Plan B jalan. Ternyata kamu bisa mikir juga.',
+    '3-pause': 'Mesin berhenti, kas ikut tidur siang.',
+    '4-scale': 'Momentum disikat habis. Keren, ngaku aja kamu senyum-senyum.',
+    '4-price': 'Harga naik, nyali naik setengah.',
+    '5-grand': 'All in dan menang. Legenda, titik.',
+    '5-selective': 'Main aman di final… ya nggak apa, yang penting selamat.',
+  };
+  const roastLine = lastLog ? (roast[`${round}-${lastLog.optionId}`] ?? (lastLog.challenge.success ? 'Wah, keren. Serius, keren.' : 'Hmm. Menarik… mari kita pura-pura ini bagian dari rencana.')) : null;
+  const mascotMessage = lastLog && roastLine ? roastLine : selected ? 'Pilihan bagus… untuk sekarang.' : 'Pilih satu. Yang jelek juga boleh, biar seru.';
 
   return <main className="game-shell min-h-[100dvh]"><TopBar round={round} cash={totals.cash} name={name} brand={brand} onRestart={onRestart} onBack={onExitToBriefing} /><div className="relative mx-auto max-w-[1450px] px-5 py-7 sm:px-8 lg:px-12"><FloatingParticles />
     <LevelMap current={round} logs={logs} onJump={jumpToLevel} />
     <div className="relative grid gap-8 xl:grid-cols-[minmax(0,1fr)_310px]"><section>
-      <div className="label mb-3">Level {round} dari 5 · {step === 'brief' ? 'baca kasus' : step === 'decide' ? 'pilih + tulis aksi' : 'hasil'}</div>
-      <div className="mb-8 flex flex-wrap items-end justify-between gap-4"><div><h1 className="ink font-display text-4xl font-bold tracking-[-.06em] sm:text-5xl">{info.title}</h1><p className="muted-ink mt-2 text-base">{info.subtitle}</p></div><div className="surface-yellow rounded-2xl px-4 py-3 text-right"><div className="label">Brief pesanan</div><div className="yellow mt-1 font-display text-lg font-bold">{info.order}</div></div></div>
+      <div className="mb-6"><h1 className="ink font-display text-4xl font-bold tracking-[-.06em] sm:text-5xl">Level {round} · {info.title}</h1><p className="muted-ink mt-1 text-base">{info.subtitle} · {info.order}</p></div>
 
-      {step === 'brief' && <div className="grid gap-4 lg:grid-cols-3">
-        {[{ title: story.greeting, text: story.situation }, { title: 'Yang harus kamu lakukan', text: story.task }, { title: 'Bocoran manajer senior', text: story.tip }].map((card, i) => <div key={card.title} className="card-in surface rounded-3xl p-6" style={{ animationDelay: `${i * .13}s` }}><div className="label mb-2">Kartu {i + 1} · Level {round}</div><h2 className="ink font-display text-lg font-bold leading-snug">{card.title}</h2><p className="muted-ink mt-2 text-sm leading-relaxed">{card.text}</p></div>)}
-        <div className="mt-2 flex flex-wrap gap-3 lg:col-span-3"><button data-testid="button-to-decide" onClick={() => { const ex = logs.find((l) => l.round === round); if (ex) { setSelected(ex.optionId); setActionNote(ex.actionNote); } setStep('decide'); }} className="button-yellow group inline-flex items-center gap-3 rounded-2xl border-2 px-6 py-3.5 font-display font-bold transition hover:-translate-y-1">Lihat pilihan keputusan <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" /></button><BackButton onClick={prevLevel} label={round > 1 ? `Kembali ke Level ${round - 1}` : 'Kembali ke pengarahan'} /></div>
+      {step === 'brief' && <div className="card-in surface max-w-3xl rounded-[28px] p-7 sm:p-9" key={`brief-${round}`}>
+        <div className="flex items-start gap-5"><div className="hidden sm:block"><JellyMascot mood="happy" compact /></div><div><h2 className="ink font-display text-2xl font-bold leading-tight sm:text-3xl">{story.greeting}</h2><p className="muted-ink mt-2 text-[15px] leading-relaxed">{story.situation}</p></div></div>
+        <div className="surface-yellow mt-5 rounded-2xl p-4"><div className="label">Misimu</div><p className="ink mt-1 text-sm font-medium leading-relaxed">{story.task}</p></div>
+        <p className="muted-ink mt-3 text-[13px] italic">“{story.tip}”</p>
+        <div className="mt-5 flex flex-wrap gap-3"><button data-testid="button-to-decide" onClick={() => { const ex = logs.find((l) => l.round === round); if (ex) { setSelected(ex.optionId); setActionNote(ex.actionNote); } setStep('decide'); }} className="button-yellow group inline-flex items-center gap-3 rounded-2xl border-2 px-6 py-3.5 font-display font-bold transition hover:-translate-y-1">Pilih keputusan <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" /></button><BackButton onClick={prevLevel} label={round > 1 ? `Level ${round - 1}` : 'Pengarahan'} /></div>
       </div>}
 
       {step === 'decide' && <>
-        <div className="challenge-card mb-6 flex items-start gap-3 rounded-2xl border px-4 py-4"><Target className="challenge-target mt-0.5 h-5 w-5 shrink-0" /><div className="flex-1"><div className="label text-[var(--blue)]">Tantangan level {round}</div><h2 className="ink mt-1 font-display text-lg font-bold">{challenges[round].title}</h2><p className="muted-ink mt-1 text-sm">{challenges[round].detail}</p></div></div>
-        <div className={`grid gap-4 ${options.length > 2 ? 'md:grid-cols-2' : 'lg:grid-cols-2'}`}>{options.map((option, index) => <div key={option.id} className="screen-pop" style={{ animationDelay: `${index * .08}s` }}><DecisionCard option={option} selected={selected === option.id} disabled={false} onChoose={() => setSelected(option.id)} /></div>)}</div>
-        <div className="surface mt-5 rounded-3xl p-5 sm:p-6"><label htmlFor="action-note" className="label-strong">Langkah aksimu — tulis dengan kata-katamu sendiri</label><p className="muted-ink mt-1 text-sm">Contoh: “Besok pagi aku telepon pemasok cadangan dan bagi tim jadi dua shift.” Boleh dikosongkan, tapi nilaimu lebih kuat kalau diisi.</p><textarea id="action-note" data-testid="input-action-note" value={actionNote} onChange={(e) => setActionNote(e.target.value)} rows={3} maxLength={280} placeholder="Tulis satu tindakan konkret…" className="profile-input mt-3 w-full rounded-xl border px-4 py-3 text-sm outline-none transition" /><div className="label mt-2 text-right">{actionNote.length}/280</div></div>
-        <div className="sticky bottom-4 mt-5 flex flex-wrap items-center gap-3 rounded-2xl border border-[var(--line)] bg-white/90 p-3 shadow-lg backdrop-blur"><button data-testid="button-submit-decision" disabled={!selected} onClick={submit} className="button-yellow inline-flex flex-1 items-center justify-center gap-2 rounded-xl border-2 px-5 py-3 font-display font-bold transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-45 sm:flex-none sm:px-8">Submit jawaban {selected ? `· ${activeOption?.title}` : '· pilih dulu'}</button><BackButton onClick={() => setStep('brief')} label="Kembali baca kasus" />{!selected && <span className="label">Pilih satu kartu dulu, masih bisa diganti sebelum submit.</span>}</div>
+        <div className="challenge-card mb-6 flex items-start gap-3 rounded-2xl border px-4 py-4" key={`case-${round}`}><Target className="challenge-target mt-0.5 h-5 w-5 shrink-0" /><div className="flex-1"><h2 className="ink font-display text-lg font-bold">{challenges[round].title}</h2><p className="muted-ink mt-1 text-sm">{challenges[round].detail}</p></div></div>
+        <div className={`grid gap-4 ${options.length > 2 ? 'md:grid-cols-2' : 'lg:grid-cols-2'}`}>{options.map((option, index) => <div key={option.id} className="card-in" style={{ animationDelay: `${index * .09}s` }}><DecisionCard option={option} selected={selected === option.id} disabled={false} onChoose={() => setSelected(option.id)} /></div>)}</div>
+        <div className="surface mt-5 rounded-3xl p-5 sm:p-6"><label htmlFor="action-note" className="label-strong">Langkah aksimu</label><textarea id="action-note" data-testid="input-action-note" value={actionNote} onChange={(e) => setActionNote(e.target.value)} rows={2} maxLength={280} placeholder="Satu tindakan konkret…" className="profile-input mt-3 w-full rounded-xl border px-4 py-3 text-sm outline-none transition" /></div>
+        <div className="sticky bottom-4 mt-5 flex flex-wrap items-center gap-3 rounded-2xl border border-[var(--line)] bg-white/90 p-3 shadow-lg backdrop-blur"><button data-testid="button-submit-decision" disabled={!selected} onClick={submit} className="button-yellow inline-flex flex-1 items-center justify-center gap-2 rounded-xl border-2 px-5 py-3 font-display font-bold transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-45 sm:flex-none sm:px-8">Submit</button><BackButton onClick={() => setStep('brief')} label="Kasus" /></div>
       </>}
 
       {step === 'result' && lastLog && (() => {
@@ -333,9 +350,10 @@ function GameScreen({ name, brand, onFinish, onRestart, onExitToBriefing }: { na
           </div>
           <div className="grid gap-5 px-5 py-5 sm:px-7">
             <div>
+              <div className="mb-4 flex items-start gap-3 rounded-2xl bg-white/10 px-4 py-3"><JellyMascot mood={lastLog.challenge.success ? 'celebrate' : 'concerned'} compact /><p className="text-sm font-medium leading-relaxed text-white">“{roastLine}”</p></div>
               <div className={`challenge-result ${lastLog.challenge.success ? 'challenge-success' : 'challenge-learn'} mb-4 flex items-start gap-3 rounded-2xl border px-3 py-3`}>
                 <Target className="mt-0.5 h-5 w-5 shrink-0" />
-                <div><div className="text-[11px] font-bold">{lastLog.challenge.success ? 'Tantangan tembus' : 'Catatan level'}</div><div className="font-display text-lg font-bold">{lastLog.challenge.title}</div><p className="mt-1 text-xs leading-relaxed">{lastLog.challenge.detail}</p></div>
+                <div><div className="font-display text-lg font-bold">{lastLog.challenge.title}</div><p className="mt-1 text-xs leading-relaxed">{lastLog.challenge.detail}</p></div>
               </div>
               <div data-testid="status-reward-unlocked" className="reward-unlock flex items-center gap-3 rounded-2xl bg-white/10 px-3 py-3">
                 <div className="reward-icon grid h-11 w-11 shrink-0 place-items-center rounded-xl"><RewardIcon className="h-6 w-6" /></div>
@@ -343,13 +361,13 @@ function GameScreen({ name, brand, onFinish, onRestart, onExitToBriefing }: { na
                 {lastLog.streakAfter > 1 && <div className="ml-auto flex items-center gap-1 rounded-full bg-[var(--yellow)] px-2 py-1 text-[11px] font-bold text-[var(--ink)]"><Flame className="h-3 w-3" /> {lastLog.streakAfter}</div>}
               </div>
               {lastLog.actionNote && <div className="mt-4 rounded-2xl bg-white/10 px-4 py-3"><div className="text-[11px] font-bold text-[#b5f2e8]">Aksi yang kamu tulis</div><p className="mt-1 text-sm text-white">“{lastLog.actionNote}”</p></div>}
-              <div className="mt-4 flex items-center gap-2 text-[12px] font-bold text-[var(--yellow)]"><Lightbulb className="h-3.5 w-3.5" /> Kenapa ini penting</div><p className="mt-2 max-w-2xl text-sm leading-relaxed">{option.rationale}</p>
+              <div className="mt-4 flex items-center gap-2 text-[12px] font-bold text-[var(--yellow)]"><Lightbulb className="h-3.5 w-3.5" /> Kenapa</div><p className="mt-1 max-w-2xl text-sm leading-relaxed">{option.rationale}</p>
             </div>
-            <div className="flex flex-wrap gap-3"><button data-testid="button-next-round" onClick={next} className="button-yellow group rounded-xl border-2 px-5 py-3 font-display text-sm font-bold transition hover:-translate-y-1">Lanjut ke {round < 5 ? `Level ${round + 1}` : 'hasil akhir'} <ArrowRight className="ml-1 inline h-4 w-4 transition-transform group-hover:translate-x-1" /></button><button onClick={editChoice} className="button-quiet inline-flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold"><ArrowLeft className="h-4 w-4" /> Ubah pilihan</button><BackButton onClick={() => setStep('brief')} label="Baca ulang kasus" /></div>
+            <div className="flex flex-wrap gap-3"><button data-testid="button-next-round" onClick={next} className="button-yellow group rounded-xl border-2 px-5 py-3 font-display text-sm font-bold transition hover:-translate-y-1">{round < 5 ? `Level ${round + 1} →` : 'Lihat hasil →'}</button><button onClick={editChoice} className="button-quiet inline-flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold"><ArrowLeft className="h-4 w-4" /> Ganti</button></div>
           </div>
         </div>;
       })()}
-    </section><aside className="xl:sticky xl:top-6 xl:self-start"><div className="mascot-zone relative mb-5 flex justify-center xl:justify-end"><div className={`mascot-toast ${selected || lastLog ? 'toast-visible' : ''}`} role="status"><Gift className="h-4 w-4 shrink-0" /><span>{mascotMessage}</span></div><div className="reward-float grid h-10 w-10 place-items-center rounded-xl border-2"><Gift className="h-5 w-5" /></div><JellyMascot mood={mood} compact /></div><div className="streak-card mb-4 flex items-center justify-between rounded-2xl border px-4 py-3"><div><div className="label">Kombo manajer</div><div className="font-display text-lg font-bold">{totals.streak} langkah positif</div></div><div className="streak-flame grid h-10 w-10 place-items-center rounded-xl"><Flame className="h-5 w-5" /></div></div><div className="grid grid-cols-2 gap-3 xl:grid-cols-1"><StatCard icon={CircleDollarSign} label="Profit berjalan" value={rupiah(totals.profit)} detail="Akumulasi 5 level" accent="var(--mint)" /><StatCard icon={Gauge} label="Kapasitas" value={`${totals.capacity} cup`} detail="Kemampuan produksi" accent="var(--pink)" /><StatCard icon={Boxes} label="Inventory" value={`${totals.inventory} cup`} detail="Stok siap kirim" accent="var(--yellow)" /><StatCard icon={Heart} label="Reputasi" value={`${totals.reputation}/100`} detail="Kepercayaan pasar" accent="var(--lavender)" /></div><div className="mt-3 rounded-2xl border border-[var(--line)] bg-white/80 px-4 py-3"><div className="label">Skor sementara · {score}</div><p className="muted-ink mt-1 text-[13px]">Skor dihitung dari profit, reputasi, kapasitas, inventory, dan kombo.</p></div><div className="intel-card mt-4 hidden rounded-2xl border p-4 xl:block"><div className="flex items-center gap-2 text-[12px] font-bold"><LockKeyhole className="h-3.5 w-3.5 yellow" /> Intel manajer</div><p className="mt-3 text-xs leading-relaxed">Jangan hanya mengejar profit. Kas, kapasitas, inventory, dan reputasi saling tarik-menarik.</p></div></aside></div></div></main>;
+    </section><aside className="xl:sticky xl:top-6 xl:self-start"><div className="mascot-zone relative mb-5 flex justify-center xl:justify-end"><div key={`${round}-${step}-${selected ?? 'none'}-${logs.length}`} className="mascot-toast toast-visible" role="status"><Gift className="h-4 w-4 shrink-0" /><span>{mascotMessage}</span></div><div className="reward-float grid h-10 w-10 place-items-center rounded-xl border-2"><Gift className="h-5 w-5" /></div><JellyMascot mood={mood} compact /></div><div className="streak-card mb-4 flex items-center justify-between rounded-2xl border px-4 py-3"><div><div className="label">Kombo manajer</div><div className="font-display text-lg font-bold">{totals.streak} langkah positif</div></div><div className="streak-flame grid h-10 w-10 place-items-center rounded-xl"><Flame className="h-5 w-5" /></div></div><div className="grid grid-cols-2 gap-3 xl:grid-cols-1"><StatCard icon={CircleDollarSign} label="Profit berjalan" value={rupiah(totals.profit)} detail="Akumulasi 5 level" accent="var(--mint)" /><StatCard icon={Gauge} label="Kapasitas" value={`${totals.capacity} cup`} detail="Kemampuan produksi" accent="var(--pink)" /><StatCard icon={Boxes} label="Inventory" value={`${totals.inventory} cup`} detail="Stok siap kirim" accent="var(--yellow)" /><StatCard icon={Heart} label="Reputasi" value={`${totals.reputation}/100`} detail="Kepercayaan pasar" accent="var(--lavender)" /></div><div className="mt-3 rounded-2xl border border-[var(--line)] bg-white/80 px-4 py-3"><div className="label">Skor · {score}</div></div></aside></div></div></main>;
 }
 
 function FinalScreen({ name, brand, logs, onRestart }: { name: string; brand: string; logs: RoundLog[]; onRestart: () => void }) {
