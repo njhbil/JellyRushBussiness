@@ -10,6 +10,13 @@ out-tsc
 
 # dependencies
 node_modules
+.pnpm-store/
+
+# env / secrets - never commit these
+.env
+.env.*
+*.local
+!.env.example
 
 # IDEs and editors
 /.idea
@@ -47,3 +54,14 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# AI agent working dirs - never push these to GitHub
+.agents/
+.conversation/
+
+# Vercel
+.vercel/
+
+# build outputs (belt & suspenders, dist already covers nested dist/)
+dist/
+build/
