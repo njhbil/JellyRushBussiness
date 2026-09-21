@@ -91,6 +91,11 @@
 .font-display { font-family: var(--app-font-serif); }
 .font-mono { font-family: var(--app-font-mono); }
 
+/* Human, non-AI labels: same family as body copy (Outfit), sentence case, no wide tracking. */
+.label { font-family: var(--app-font-sans); font-weight: 600; font-size: 13px; letter-spacing: .01em; color: var(--muted-ink); }
+.label-strong { font-family: var(--app-font-sans); font-weight: 700; font-size: 13px; letter-spacing: .01em; color: var(--ink); }
+.tag { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; border: 1px solid var(--line); background: rgba(255,255,255,.8); padding: 6px 12px; font-family: var(--app-font-sans); font-weight: 600; font-size: 12.5px; letter-spacing: .01em; color: var(--muted-ink); }
+
 .game-shell {
   color: var(--ink);
   background:
@@ -194,8 +199,10 @@
 @keyframes confetti-fall { 0% { opacity: 1; transform: translateY(-15px) rotate(0); } 100% { opacity: 0; transform: translateY(155px) rotate(260deg); } }
 @keyframes metric-pop { 0% { opacity: .35; transform: translateY(4px); } 100% { opacity: 1; transform: translateY(0); } }
 @keyframes toast-pop { 0% { opacity: 0; transform: translateY(7px) scale(.94); } 65% { opacity: 1; transform: translateY(-3px) scale(1.03); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes card-in { from { opacity: 0; transform: translateY(26px) rotate(-1.2deg) scale(.97); } to { opacity: 1; transform: translateY(0) rotate(0) scale(1); } }
 @keyframes reward-bob { 0%,100% { transform: translateY(0) rotate(3deg); } 50% { transform: translateY(-6px) rotate(-4deg); } }
 .screen-pop { animation: screen-pop .65s cubic-bezier(.22,.8,.25,1) both; }
+.card-in { animation: card-in .6s cubic-bezier(.22,.8,.25,1) both; }
 .slide-in { animation: slide-in .5s cubic-bezier(.22,.8,.25,1) both; }
 .jelly-breathe { animation: jelly-breathe 3.4s ease-in-out infinite; transform-origin: center bottom; }
 .pulse-ring { animation: pulse-ring 2s ease-out infinite; }
