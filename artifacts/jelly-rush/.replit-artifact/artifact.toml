@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Jelly Rush Business Game"
+description = "An animated browser game where aspiring managers run a jelly cup business through five rounds of production, budgeting, supplier events, demand spikes, and strategic decisions."
+version = "1.0.0"
+id = "artifacts/jelly-rush"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 19577
+
+[services.development]
+run = "pnpm --filter @workspace/jelly-rush run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/jelly-rush", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/jelly-rush/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "19577"
+BASE_PATH = "/"
