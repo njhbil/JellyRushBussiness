@@ -164,6 +164,27 @@
 .share-button { background: #f7fbff; border-color: var(--line); color: var(--muted-ink); }
 .share-button:hover { border-color: var(--blue); color: var(--blue); background: white; }
 .not-found { background: #e9f8ff; color: var(--ink); }
+.challenge-card { background: linear-gradient(105deg, rgba(255,255,255,.96), rgba(233,248,255,.88)); border-color: #bcdcf0; box-shadow: 0 10px 22px rgba(32,79,139,.07); }
+.challenge-target { color: var(--pink); }
+.challenge-status { background: #edf4fa; color: var(--muted-ink); }
+.challenge-status.is-success { background: #dff8f2; color: #178e83; }
+.challenge-status.is-learning { background: #fff1d5; color: #9b7000; }
+.challenge-result { color: var(--ink); }
+.challenge-success { background: rgba(112,214,198,.2); border-color: rgba(112,214,198,.55); }
+.challenge-learn { background: rgba(255,211,78,.18); border-color: rgba(255,211,78,.55); }
+.challenge-result p { color: inherit; opacity: .84; }
+.streak-card { background: #fff7d9; border-color: #f3d879; color: var(--ink); box-shadow: 0 10px 24px rgba(213,157,0,.10); }
+.streak-flame { background: var(--yellow); color: var(--ink); border: 1px solid #e1b82e; }
+.mascot-zone { min-height: 190px; }
+.mascot-toast { position: absolute; right: 58%; top: -12px; z-index: 2; display: flex; max-width: 190px; align-items: center; gap: 8px; border: 2px solid var(--ink); border-radius: 15px 15px 15px 4px; background: var(--yellow); padding: 9px 11px; color: var(--ink); font-family: var(--app-font-serif); font-size: 12px; font-weight: 700; line-height: 1.15; box-shadow: 3px 3px 0 var(--pink); opacity: 0; transform: translateY(7px) scale(.94); pointer-events: none; }
+.mascot-toast.toast-visible { animation: toast-pop .48s cubic-bezier(.2,.9,.2,1) forwards; }
+.reward-float { position: absolute; right: 15px; top: 68px; z-index: 1; background: #fff7d9; border-color: var(--ink); color: #9b7000; box-shadow: 3px 3px 0 var(--pink); animation: reward-bob 2.4s ease-in-out infinite; }
+.reward-unlock { border: 1px solid rgba(255,255,255,.2); }
+.reward-icon { background: var(--yellow); color: var(--ink); border: 2px solid var(--ink); }
+.final-celebration { background: #fff7d9; border-color: #e1b82e; color: #9b7000; box-shadow: 3px 3px 0 var(--pink); }
+.reward-shelf { background: #f3fbff; border-color: #bcdcf0; }
+.reward-shelf-item { background: white; border: 1px solid var(--line); }
+.reward-shelf-item > div:first-child { background: #fff7d9; color: #9b7000; }
 
 @keyframes jelly-breathe { 0%,100% { transform: translateY(0) rotate(-2deg) scale(1); } 50% { transform: translateY(-9px) rotate(2deg) scale(1.035); } }
 @keyframes float-up { 0% { opacity: 0; transform: translateY(20px) scale(.7); } 20% { opacity: .9; } 100% { opacity: 0; transform: translateY(-170px) scale(1.1); } }
@@ -172,6 +193,8 @@
 @keyframes pulse-ring { 0% { opacity: .55; transform: scale(.92); } 70%,100% { opacity: 0; transform: scale(1.2); } }
 @keyframes confetti-fall { 0% { opacity: 1; transform: translateY(-15px) rotate(0); } 100% { opacity: 0; transform: translateY(155px) rotate(260deg); } }
 @keyframes metric-pop { 0% { opacity: .35; transform: translateY(4px); } 100% { opacity: 1; transform: translateY(0); } }
+@keyframes toast-pop { 0% { opacity: 0; transform: translateY(7px) scale(.94); } 65% { opacity: 1; transform: translateY(-3px) scale(1.03); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes reward-bob { 0%,100% { transform: translateY(0) rotate(3deg); } 50% { transform: translateY(-6px) rotate(-4deg); } }
 .screen-pop { animation: screen-pop .65s cubic-bezier(.22,.8,.25,1) both; }
 .slide-in { animation: slide-in .5s cubic-bezier(.22,.8,.25,1) both; }
 .jelly-breathe { animation: jelly-breathe 3.4s ease-in-out infinite; transform-origin: center bottom; }
