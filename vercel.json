@@ -2,5 +2,5 @@
   "framework": "vite",
   "installCommand": "pnpm install --frozen-lockfile",
   "buildCommand": "pnpm --filter @workspace/jelly-rush build",
-  "outputDirectory": "dist/public"
+  "outputDirectory": "public"
 }
