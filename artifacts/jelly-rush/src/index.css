@@ -200,6 +200,8 @@
 @keyframes metric-pop { 0% { opacity: .35; transform: translateY(4px); } 100% { opacity: 1; transform: translateY(0); } }
 @keyframes toast-pop { 0% { opacity: 0; transform: translateY(7px) scale(.94); } 65% { opacity: 1; transform: translateY(-3px) scale(1.03); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes card-in { from { opacity: 0; transform: translateY(26px) rotate(-1.2deg) scale(.97); } to { opacity: 1; transform: translateY(0) rotate(0) scale(1); } }
+@keyframes mascot-nudge { 0% { opacity: 0; transform: translateX(-14px) rotate(-4deg) scale(.94); } 60% { opacity: 1; transform: translateX(5px) rotate(2deg) scale(1.02); } 100% { opacity: 1; transform: translateX(0) rotate(0) scale(1); } }
+.mascot-nudge { animation: mascot-nudge .55s cubic-bezier(.22,.8,.25,1) both; }
 @keyframes reward-bob { 0%,100% { transform: translateY(0) rotate(3deg); } 50% { transform: translateY(-6px) rotate(-4deg); } }
 .screen-pop { animation: screen-pop .65s cubic-bezier(.22,.8,.25,1) both; }
 .card-in { animation: card-in .6s cubic-bezier(.22,.8,.25,1) both; }
