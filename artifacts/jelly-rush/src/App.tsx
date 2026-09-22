@@ -6,7 +6,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import {
   ArrowLeft, ArrowRight, Award, BadgeCheck, BarChart3, BatteryCharging, Boxes, Check, ChevronRight,
   CircleDollarSign, Factory, Flame, Gauge, Gift, HandCoins, Heart, Lightbulb, LockKeyhole,
-  Medal, PackageCheck, Pause, RotateCcw, ShieldCheck, Sparkles, Star, Store, Target, TrendingUp,
+  Medal, PackageCheck, Pause, RotateCcw, ShieldCheck, Sparkles, Star, Store, Target, TrendingUp, Trophy,
   Truck, Users, Zap,
 } from 'lucide-react';
 import { Route, Switch, Router as WouterRouter } from 'wouter';
@@ -35,40 +35,40 @@ const rupiah = (value: number) => `Rp${Math.round(value).toLocaleString('id-ID')
 const INITIAL = { cash: 3000000, profit: 0, reputation: 62, capacity: 200, inventory: 50 };
 
 const roundInfo: Record<Round, { title: string; subtitle: string; icon: typeof Store; color: string; order: string; pulse?: string }> = {
-  1: { title: 'Pesanan pembuka', subtitle: 'Toko Rasa ingin mencoba 50 cup.', icon: Store, color: '#d39d00', order: '50 cup · Rp15.000 / cup' },
-  2: { title: 'Pesanan besar masuk', subtitle: 'Festival kampus memesan 150 cup.', icon: Flame, color: '#cf4b81', order: '150 cup · Rp15.000 / cup', pulse: 'Peluang besar' },
-  3: { title: 'Masalah pemasok', subtitle: 'Bahan utama terlambat di dermaga.', icon: Truck, color: '#178e83', order: 'Kualitas & waktu dipertaruhkan', pulse: 'Situasi berubah' },
-  4: { title: 'Pasar sedang naik', subtitle: 'Demam jelly membuat permintaan melonjak 40%.', icon: TrendingUp, color: '#cf4b81', order: '+40% permintaan · jaga reputasi', pulse: 'Lonjakan permintaan' },
-  5: { title: 'Pesanan final', subtitle: 'Distributor nasional mengetuk pintu.', icon: Award, color: '#7055be', order: '300 cup · momen pembuktian', pulse: 'Babak final' },
+  1: { title: 'Pesanan pembuka', subtitle: 'Toko Rasa mencoba 50 cup — seperempat produksi bulananmu.', icon: Store, color: '#d39d00', order: '50 cup · Rp15.000 / cup' },
+  2: { title: 'Pesanan besar masuk', subtitle: 'Festival kampus pesan 150 cup — 75% produksi bulananmu.', icon: Flame, color: '#cf4b81', order: '150 cup · setara hampir 3 minggu produksi', pulse: 'Peluang besar' },
+  3: { title: 'Masalah pemasok', subtitle: 'Pasokan bahan utama telat — jadwal produksimu terancam.', icon: Truck, color: '#178e83', order: 'Jadwal 50 cup/minggu dipertaruhkan', pulse: 'Situasi berubah' },
+  4: { title: 'Pasar sedang naik', subtitle: 'Permintaan naik 40% — jadi ±280 cup/bulan, kapasitasmu 200 cup.', icon: TrendingUp, color: '#cf4b81', order: '+40% · ±280 cup vs kapasitas 200', pulse: 'Lonjakan permintaan' },
+  5: { title: 'Pesanan final', subtitle: 'Distributor pesan 300 cup — 1,5× produksi bulananmu.', icon: Award, color: '#7055be', order: '300 cup · setara ±6 minggu kerja', pulse: 'Babak final' },
 };
 const levelStory: Record<Round, { greeting: string; situation: string; task: string; tip: string }> = {
   1: {
     greeting: 'Halo, selamat datang di Jelly Rush.',
     situation: 'Kamu sekarang jadi manajer bisnis jelly: modal Rp3 juta, ritme produksi 25 cup per batch 2 kali seminggu (±200 cup per bulan), 5 anggota tim, dan 50 cup stok di gudang.',
-    task: 'Toko Rasa mau coba 50 cup (±2 pack, isi 20–25 cup per pack). Pilih cara produksimu, lalu tulis satu langkah konkret yang bakal kamu lakukan besok pagi.',
+    task: 'Toko Rasa mau coba 50 cup — itu seperempat produksi bulananmu (200 cup), jadi masih muat di ritme 2 batch seminggu (±2 pack, isi 20–25 cup per pack). Pilih cara produksimu, lalu tulis satu langkah konkret yang bakal kamu lakukan besok pagi.',
     tip: 'Pesanan pertama itu soal kepercayaan. Rapi dulu, spekulasi nanti.',
   },
   2: {
     greeting: 'Level 2: order besar datang.',
-    situation: 'Festival kampus memesan 150 cup — hampir tiga minggu produksimu. Kapasitasmu belum tentu cukup dan stok mulai menipis.',
+    situation: 'Festival kampus memesan 150 cup — itu 75% dari produksi bulananmu (200 cup), setara hampir 3 minggu kerja penuh. Stok di gudang tinggal 50 cup, jadi kamu wajib tambah ritme produksi tanpa nurunin kualitas.',
     task: 'Pilih strategi produksimu. Kamu boleh gonta-ganti pilihan sebelum tekan submit.',
     tip: 'Kecepatan tanpa kualitas bikin reputasi jebol. Cek kolom kapasitas sebelum submit.',
   },
   3: {
     greeting: 'Level 3: pemasok bermasalah.',
-    situation: 'Bahan utama tertahan di dermaga. Mesin bisa berhenti kalau kamu diam saja.',
+    situation: 'Bahan utama untuk 2 batch minggu ini (50 cup) tertahan di pemasok. Ritmemu cuma 2 batch seminggu — kalau diam saja, satu jadwal produksi hilang dan pelanggan ikut menunggu.',
     task: 'Putuskan: tunggu, cari cadangan, atau jeda. Tulis juga siapa yang kamu hubungi pertama.',
     tip: 'Bisnis yang hidup itu yang mesinnya tetap bergerak.',
   },
   4: {
     greeting: 'Level 4: pasar lagi panas.',
-    situation: 'Demam jelly bikin permintaan naik 40%. Ini momen mengubah keramaian jadi kas.',
+    situation: 'Demam jelly bikin permintaan naik 40% — jadi ±280 cup per bulan, padahal kapasitasmu cuma 200 cup. Ini momen mengubah keramaian jadi kas, asal strategimu pas.',
     task: 'Pilih caramu menangkap momentum, lalu submit kalau sudah yakin.',
     tip: 'Momentum tanpa persiapan cuma jadi antrean kecewa.',
   },
   5: {
     greeting: 'Level 5: pembuktian terakhir.',
-    situation: 'Distributor nasional mau 300 cup — 1,5× produksi bulananmu. Satu keputusan besar menutup seluruh perjalananmu.',
+    situation: 'Distributor nasional mau 300 cup — 1,5× produksi bulananmu, setara ±6 minggu kerja tanpa jeda. Satu keputusan besar menutup seluruh perjalananmu.',
     task: 'Ambil semua atau bertahap? Pastikan kas akhirmu masih punya napas.',
     tip: 'Target akhir: kas di atas Rp2,1 juta dan reputasi tetap terjaga.',
   },
@@ -101,11 +101,11 @@ const optionsByRound: Record<Round, Option[]> = {
   ],
 };
 const challenges: Record<Round, RoundChallenge> = {
-  1: { title: 'Lindungi reputasi pembuka', detail: 'Buktikan bahwa pesanan pertama tiba rapi sebelum mengejar stok tambahan.' },
-  2: { title: 'Selamatkan order besar', detail: 'Festival menunggu. Pilih cara yang membuat produksi tetap sanggup mengirim 150 cup.' },
-  3: { title: 'Jaga mesin tetap bergerak', detail: 'Pemasok terlambat. Cari ritme agar pelanggan tidak ikut menunggu.' },
-  4: { title: 'Kapitalisasi demam jelly', detail: 'Permintaan naik 40%. Ubah momentum menjadi penjualan tanpa merusak kepercayaan.' },
-  5: { title: 'Tutup dengan kas sehat', detail: 'Buktikan bisnis siap tumbuh: ambil peluang sambil menyisakan napas untuk besok.' },
+  1: { title: 'Lindungi reputasi pembuka', detail: 'Buktikan pesanan pembuka 50 cup tiba rapi sebelum mengejar stok tambahan.' },
+  2: { title: 'Selamatkan order besar', detail: 'Festival menunggu 150 cup — 75% produksi bulananmu. Pilih cara yang membuat produksi sanggup mengirim tanpa menjual kualitas.' },
+  3: { title: 'Jaga mesin tetap bergerak', detail: 'Pemasok terlambat. Pilih ritme agar jadwal 50 cup per minggumu tetap jalan dan pelanggan tidak menunggu.' },
+  4: { title: 'Kapitalisasi demam jelly', detail: 'Permintaan +40% (±280 cup), kapasitasmu cuma 200. Ubah momentum jadi penjualan tanpa merusak kepercayaan.' },
+  5: { title: 'Tutup dengan kas sehat', detail: 'Order 300 cup = 1,5× produksi bulananmu. Buktikan bisnis siap tumbuh: ambil peluang sambil menyisakan napas untuk besok.' },
 };
 
 // Opsi terbaik tiap level + jebakan yang harus dihindari. Dipakai kartu pembanding habis submit.
@@ -116,6 +116,15 @@ const bestChoice: Record<Round, { id: string; why: string; trapId?: string; trap
   4: { id: 'scale', why: 'Demand +40% cuma bisa dimakan sama kapasitas siap. Ini momennya, bukan iklannya.', trapId: 'ads', trapLine: 'Untungnya kamu nggak kejebak iklan — bakar 950 ribu, balik 400 ribu.' },
   5: { id: 'grand', why: 'Kas dan reputasimu dibangun 4 level buat momen ini. All in yang diperhitungkan.', trapId: 'loan', trapLine: 'Untungnya kamu nggak ngutang — bunga makan kas 550 ribu.' },
 };
+
+// Nilai keputusan: kas bersih + reputasi + bonus tembus tantangan. Basis hitung "seberapa ideal" langkahmu.
+const decisionValue = (option: Option, challengeSuccess: boolean) => (option.profit - option.cost) + option.reputation * 15000 + (challengeSuccess ? 90000 : 0);
+const idealPct = (round: Round, option: Option, challengeSuccess: boolean) => {
+  const bestOption = optionsByRound[round].find((o) => o.id === bestChoice[round].id)!;
+  return Math.max(0, Math.min(100, Math.round((decisionValue(option, challengeSuccess) / decisionValue(bestOption, true)) * 100)));
+};
+const signed = (n: number) => (n >= 0 ? `+${n}` : `−${Math.abs(n)}`);
+const signedCash = (n: number) => (n >= 0 ? `+${rupiah(n)}` : `−${rupiah(-n)}`);
 
 function evaluateChallenge(round: Round, option: Option, cashAfter: number): ChallengeResult {
   const outcomes: Record<Round, ChallengeResult> = {
@@ -361,7 +370,7 @@ function GameScreen({ name, brand, onFinish, onRestart, onExitToBriefing }: { na
         const bestOption = optionsByRound[round].find((o) => o.id === best.id)!;
         const bestNet = bestOption.profit - bestOption.cost;
         const isBest = lastLog.optionId === best.id;
-        const gap = bestNet - net;
+        const pct = idealPct(round, option, lastLog.challenge.success);
         return <div className="result-panel slide-in mt-2 overflow-hidden rounded-3xl border-2">
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-white/20 px-5 py-4 sm:px-7">
             <div className="flex items-center gap-3"><div className="grid h-9 w-9 place-items-center rounded-full bg-[var(--mint)] text-[var(--ink)]"><Check className="h-5 w-5" /></div><div><div className="text-[12px] font-semibold text-[#b5f2e8]">Jawaban tersubmit</div><div className="font-display font-bold">{option.title}</div></div></div>
@@ -381,9 +390,24 @@ function GameScreen({ name, brand, onFinish, onRestart, onExitToBriefing }: { na
               </div>
               {lastLog.actionNote && <div className="mt-4 rounded-2xl bg-white/10 px-4 py-3"><div className="text-[11px] font-bold text-[#b5f2e8]">Aksi yang kamu tulis</div><p className="mt-1 text-sm text-white">“{lastLog.actionNote}”</p></div>}
               <div className="mt-4 rounded-2xl bg-white/10 px-4 py-3" key={`compare-${round}-${lastLog.optionId}`}>
-                {isBest
-                  ? <><div className="flex items-center gap-2 text-[12px] font-bold text-[var(--yellow)]"><BadgeCheck className="h-4 w-4" /> Pilihan tepat.</div><p className="mt-1 text-sm leading-relaxed text-white">{best.why}</p>{best.trapLine && <p className="mt-1 text-[13px] text-[#d7eaff]">{best.trapLine}</p>}</>
-                  : <><div className="flex items-center gap-2 text-[12px] font-bold text-[var(--yellow)]"><Lightbulb className="h-4 w-4" /> Pilihanmu {lastLog.challenge.success ? 'lumayan' : 'kurang nendang'} — yang paling cuan: {bestOption.title}.</div><p className="mt-1 text-sm leading-relaxed text-white">{best.why}</p><p className="mt-1 text-[13px] font-semibold text-white">Selisih kas {gap > 0 ? `+${rupiah(gap)}` : 'Rp0'} kalau kamu ambil itu.</p>{lastLog.optionId === best.trapId && best.trapLine && <p className="mt-1 text-[13px] text-[#ffd9e5]">Kamu kejebak nih. {best.trapLine.replace(/^Untungnya kamu nggak (pilih|kejebak) /, 'Soalnya ')}</p>}</>}
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  {isBest
+                    ? <div className="flex items-center gap-2 text-[12px] font-bold text-[var(--yellow)]"><BadgeCheck className="h-4 w-4" /> {pct === 100 ? 'Pilihan tepat — 100% dari ideal.' : 'Pilihan ideal, tapi eksekusi belum 100%.'}</div>
+                    : <div className="flex items-center gap-2 text-[12px] font-bold text-[var(--yellow)]"><Lightbulb className="h-4 w-4" /> Belum 100% — seharusnya: {bestOption.title}</div>}
+                  <div className={`rounded-full px-2.5 py-1 text-[11px] font-bold text-[var(--ink)] ${pct === 100 ? 'bg-[var(--mint)]' : 'bg-[var(--yellow)]'}`}>{pct}% dari ideal</div>
+                </div>
+                <p className="mt-1.5 text-sm leading-relaxed text-white">{best.why}</p>
+                {isBest ? <>
+                  {best.trapLine && <p className="mt-1 text-[13px] text-[#d7eaff]">{best.trapLine}</p>}
+                  {pct < 100 && <p className="mt-1 text-[13px] text-[#ffd9e5]">Kenapa belum 100%: {lastLog.challenge.detail}</p>}
+                </> : <>
+                  <ul className="mt-2 grid gap-1.5 text-[13px] leading-snug text-[#d7eaff]">
+                    <li className="flex gap-2"><span className="shrink-0 font-bold text-[var(--yellow)]">Kas</span><span>{net < bestNet ? `Pilihan ideal menghasilkan ${signedCash(bestNet)}, pilihanmu ${signedCash(net)} — kurang ${rupiah(bestNet - net)}.` : `Pilihanmu ${signedCash(net)} vs ideal ${signedCash(bestNet)} — malah lebih ${rupiah(net - bestNet)}, tapi poin di bawah yang bikin beda.`}</span></li>
+                    <li className="flex gap-2"><span className="shrink-0 font-bold text-[var(--yellow)]">Reputasi</span><span>{option.reputation < bestOption.reputation ? `Kamu ${signed(option.reputation)}, ideal ${signed(bestOption.reputation)} — ketinggalan ${bestOption.reputation - option.reputation} poin kepercayaan.` : `Setara dengan pilihan ideal: ${signed(option.reputation)}.`}</span></li>
+                    <li className="flex gap-2"><span className="shrink-0 font-bold text-[var(--yellow)]">Tantangan</span><span>{lastLog.challenge.success ? 'Tembus — poin tantangan masuk.' : 'Gagal — pilihan ideal otomatis tembus. Makanya persenmu belum 100%.'}</span></li>
+                  </ul>
+                  {lastLog.optionId === best.trapId && best.trapLine && <p className="mt-1.5 text-[13px] text-[#ffd9e5]">Kamu kejebak nih. {best.trapLine.replace(/^Untungnya kamu nggak (pilih|kejebak) /, 'Soalnya ')}</p>}
+                </>}
               </div>
               <div className="mt-4 flex items-center gap-2 text-[12px] font-bold text-[var(--yellow)]"><Lightbulb className="h-3.5 w-3.5" /> Kenapa</div><p className="mt-1 max-w-2xl text-sm leading-relaxed">{option.rationale}</p>
             </div>
@@ -403,11 +427,19 @@ function FinalScreen({ name, brand, logs, onRestart }: { name: string; brand: st
   const capacity = logs.length ? logs[logs.length - 1].capacityAfter : INITIAL.capacity;
   const score = Math.max(0, Math.round((profit / 100000) + reputation * 2 + capacity / 10 + (logs.length ? logs[logs.length - 1].inventoryAfter : INITIAL.inventory) / 5 + bestStreak * 12 + rewards.length * 8));
   const rank = score > 330 ? 'Legenda Bisnis' : score > 250 ? 'Strategi Jelly' : 'Perintis Berani';
+  const idealCount = logs.filter((l) => l.optionId === bestChoice[l.round].id).length;
+  const trophies = [
+    { min: 5, name: 'Trofi Legenda', blurb: 'Lima dari lima langkah ideal — keputusan tanpa celah. Level tertinggi!', accent: '#a47c00', bg: '#fff4c9', border: '#e1b82e', stars: 5 },
+    { min: 4, name: 'Trofi Master', blurb: 'Cuma satu langkah meleset dari ideal. Tinggal selangkah lagi raih Legenda.', accent: '#4d6280', bg: '#edf3fb', border: '#9db2d1', stars: 4 },
+    { min: 3, name: 'Trofi Strategi', blurb: 'Dua langkah meleset. Fondasimu kuat — asah pilihan ideal di run berikutnya.', accent: '#9a5b21', bg: '#fbefe1', border: '#dfa06a', stars: 3 },
+    { min: 0, name: 'Trofi Pemula Berani', blurb: 'Perjalanan baru dimulai. Main lagi dan kejar minimal 3 langkah ideal!', accent: '#178e83', bg: '#eefcf9', border: '#49b9aa', stars: 1 },
+  ];
+  const trophy = trophies.find((t) => idealCount >= t.min)!;
   const [shareText, setShareText] = useState('Bagikan hasil');
   const confetti = useMemo(() => Array.from({ length: 24 }), []);
-  const share = () => { setShareText('Hasil tersalin'); navigator.clipboard?.writeText(`Jelly Rush — ${rank}, skor ${score}, profit ${rupiah(profit)}, kombo ${bestStreak}`); };
-  return <main className="game-shell relative min-h-[100dvh] overflow-hidden px-5 py-6 sm:px-10 lg:px-14"><FloatingParticles /><div className="pointer-events-none absolute inset-x-0 top-0 flex justify-center">{confetti.map((_, index) => <span key={index} className="confetti-piece absolute h-3 w-2 rounded-sm" style={{ left: `${12 + ((index * 19) % 76)}%`, top: `${index % 4 * 7}px`, background: ['var(--yellow)', 'var(--pink)', 'var(--mint)', 'var(--lavender)'][index % 4], animationDelay: `${index * .07}s`, transform: `rotate(${index * 31}deg)` }} />)}</div><div className="relative mx-auto flex min-h-[100dvh] max-w-5xl flex-col"><header className="flex items-center justify-between"><LogoMark /><span className="label">Simulasi selesai · 5 dari 5</span></header><div className="grid flex-1 items-center gap-10 py-12 lg:grid-cols-[.8fr_1.2fr]"><div className="screen-pop text-center lg:text-left"><JellyMascot mood="celebrate" /><div className="label eyebrow mt-7">Bisnismu selesai beroperasi</div><h1 className="ink mt-3 font-display text-5xl font-bold leading-[.9] tracking-[-.07em]">Kerja bagus,<br /><span className="text-[var(--pink)]">{name}.</span></h1><p className="muted-ink mx-auto mt-6 max-w-md lg:mx-0">Dari 50 cup di gudang sampai keputusan final — kamu berhasil memberi nyawa pada {brand}.</p><div className="final-celebration mt-7 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[12px] font-bold"><Gift className="h-4 w-4" /> {rewards.length} hadiah terkumpul · kombo terbaik {bestStreak} · kas {rupiah(cash)}</div><div className="mt-6 flex flex-wrap justify-center gap-3 lg:justify-start"><button data-testid="button-restart-final" onClick={onRestart} className="button-yellow inline-flex items-center gap-3 rounded-xl border-2 px-5 py-3 font-display font-bold transition hover:-translate-y-1"><RotateCcw className="h-4 w-4" /> Main lagi</button></div></div><section className="surface screen-pop rounded-[34px] p-6 sm:p-9"><div className="flex items-center justify-between border-b border-[var(--line)] pb-5"><div><div className="label">Performa akhir</div><div className="ink mt-1 font-display text-2xl font-bold">{rank}</div></div><div className="final-score grid h-16 w-16 place-items-center rounded-2xl border-2 text-center"><div className="font-display text-2xl font-bold">{score}</div><div className="text-[10px] font-bold">Nilai</div></div></div><div className="grid grid-cols-2 gap-3 py-6 sm:grid-cols-3"><div className="surface-mint rounded-2xl p-4"><CircleDollarSign className="mint h-4 w-4" /><div className="label mt-3">Profit bersih</div><div data-testid="text-final-profit" className="metric-value ink mt-1 font-display text-xl font-bold">{rupiah(profit)}</div></div><div className="surface-pink rounded-2xl p-4"><Heart className="pink h-4 w-4" /><div className="label mt-3">Reputasi</div><div data-testid="text-final-reputation" className="metric-value ink mt-1 font-display text-xl font-bold">{reputation}/100</div></div><div className="surface-yellow col-span-2 rounded-2xl p-4 sm:col-span-1"><BadgeCheck className="yellow h-4 w-4" /><div className="label mt-3">Kombo tertinggi</div><div className="ink mt-1 font-display text-xl font-bold">{bestStreak} langkah</div></div></div><div className="reward-shelf rounded-2xl border p-4"><div className="mb-3 flex items-center justify-between"><div className="mint flex items-center gap-2 text-[12px] font-bold"><Medal className="h-3.5 w-3.5" /> Rak hadiah</div><span className="label">{rewards.length}/5 terkumpul</span></div><div className="grid gap-2 sm:grid-cols-2">{rewards.map((reward) => { const RewardIcon = reward.icon; return <div key={reward.id} data-testid={`reward-${reward.id}`} className="reward-shelf-item flex items-center gap-3 rounded-xl px-3 py-2"><div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg"><RewardIcon className="h-4 w-4" /></div><div><div className="font-display text-sm font-bold">{reward.title}</div><div className="muted-ink text-[10px]">{reward.detail}</div></div></div>; })}</div></div>
-      <div className="mt-4 rounded-2xl border border-[var(--line)] bg-white p-4"><div className="flex items-center gap-2 text-[12px] font-bold"><Star className="mint h-3.5 w-3.5" /> Jejak per level</div><div className="mt-3 grid gap-2">{logs.map((log) => { const opt = optionsByRound[log.round].find((o) => o.id === log.optionId); const lnet = (opt?.profit ?? 0) - (opt?.cost ?? 0); const wasBest = log.optionId === bestChoice[log.round].id; return <div key={log.round} className={`rounded-xl border px-3 py-2.5 ${wasBest ? 'border-[#49b9aa] bg-[#eefcf9]' : 'border-[var(--line)] bg-[#f7fbff]'}`}><div className="flex items-center justify-between gap-2"><span className="text-[13px] font-bold">Lv{log.round} · {opt?.title}</span><span className={`text-[12px] font-bold ${lnet >= 0 ? 'mint' : 'text-[#c64368]'}`}>{lnet >= 0 ? `+${rupiah(lnet)}` : `−${rupiah(-lnet)}`}</span></div>{log.actionNote && <p className="muted-ink mt-0.5 text-[12px] leading-snug">“{log.actionNote}”</p>}<p className="mt-0.5 text-[12px] font-semibold">{wasBest ? 'Pilihan tepat.' : `Kurang nendang — ${optionsByRound[log.round].find((o) => o.id === bestChoice[log.round].id)?.title} lebih cuan.`}</p></div>; })}</div></div>
+  const share = () => { setShareText('Hasil tersalin'); navigator.clipboard?.writeText(`Jelly Rush — ${trophy.name} · ${rank}, skor ${score}, ${idealCount}/5 langkah ideal, profit ${rupiah(profit)}, kombo ${bestStreak}`); };
+  return <main className="game-shell relative min-h-[100dvh] overflow-hidden px-5 py-6 sm:px-10 lg:px-14"><FloatingParticles /><div className="pointer-events-none absolute inset-x-0 top-0 flex justify-center">{confetti.map((_, index) => <span key={index} className="confetti-piece absolute h-3 w-2 rounded-sm" style={{ left: `${12 + ((index * 19) % 76)}%`, top: `${index % 4 * 7}px`, background: ['var(--yellow)', 'var(--pink)', 'var(--mint)', 'var(--lavender)'][index % 4], animationDelay: `${index * .07}s`, transform: `rotate(${index * 31}deg)` }} />)}</div><div className="relative mx-auto flex min-h-[100dvh] max-w-5xl flex-col"><header className="flex items-center justify-between"><LogoMark /><span className="label">Simulasi selesai · 5 dari 5</span></header><div className="grid flex-1 items-center gap-10 py-12 lg:grid-cols-[.8fr_1.2fr]"><div className="screen-pop text-center lg:text-left"><JellyMascot mood="celebrate" /><div className="label eyebrow mt-7">Bisnismu selesai beroperasi</div><h1 className="ink mt-3 font-display text-5xl font-bold leading-[.9] tracking-[-.07em]">Kerja bagus,<br /><span className="text-[var(--pink)]">{name}.</span></h1><p className="muted-ink mx-auto mt-6 max-w-md lg:mx-0">Dari 50 cup di gudang sampai keputusan final — kamu berhasil memberi nyawa pada {brand}.</p><div className="final-celebration mt-7 inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[12px] font-bold"><Gift className="h-4 w-4" /> {rewards.length} hadiah terkumpul · kombo terbaik {bestStreak} · kas {rupiah(cash)}</div><div data-testid="trophy-card" className="trophy-card mt-6 flex items-center gap-4 rounded-3xl border-2 px-4 py-4 text-left" style={{ background: trophy.bg, borderColor: trophy.border }}><div className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl border-2 bg-white" style={{ borderColor: trophy.border, color: trophy.accent }}><Trophy className="h-8 w-8" /></div><div className="min-w-0"><div className="label" style={{ color: trophy.accent }}>Trofi terkunci</div><div className="font-display text-xl font-bold" style={{ color: trophy.accent }}>{trophy.name}</div><div className="mt-1 flex gap-0.5">{Array.from({ length: 5 }).map((_, i) => <Star key={i} className="h-3.5 w-3.5" style={{ color: i < trophy.stars ? trophy.accent : '#c9d4e3', fill: i < trophy.stars ? trophy.accent : 'transparent' }} />)}</div><p className="mt-1 text-[12.5px] font-medium leading-snug text-[#4a5a70]">{trophy.blurb}</p><div className="mt-1 text-[12px] font-bold" style={{ color: trophy.accent }}>{idealCount}/5 langkah ideal{idealCount < 5 ? ` · kurang ${5 - idealCount} lagi menuju Legenda` : ''}</div></div></div><div className="mt-6 flex flex-wrap justify-center gap-3 lg:justify-start"><button data-testid="button-restart-final" onClick={onRestart} className="button-yellow inline-flex items-center gap-3 rounded-xl border-2 px-5 py-3 font-display font-bold transition hover:-translate-y-1"><RotateCcw className="h-4 w-4" /> Main lagi</button></div></div><section className="surface screen-pop rounded-[34px] p-6 sm:p-9"><div className="flex items-center justify-between border-b border-[var(--line)] pb-5"><div><div className="label">Performa akhir</div><div className="ink mt-1 font-display text-2xl font-bold">{rank}</div></div><div className="final-score grid h-16 w-16 place-items-center rounded-2xl border-2 text-center"><div className="font-display text-2xl font-bold">{score}</div><div className="text-[10px] font-bold">Nilai</div></div></div><div className="grid grid-cols-2 gap-3 py-6 sm:grid-cols-3"><div className="surface-mint rounded-2xl p-4"><CircleDollarSign className="mint h-4 w-4" /><div className="label mt-3">Profit bersih</div><div data-testid="text-final-profit" className="metric-value ink mt-1 font-display text-xl font-bold">{rupiah(profit)}</div></div><div className="surface-pink rounded-2xl p-4"><Heart className="pink h-4 w-4" /><div className="label mt-3">Reputasi</div><div data-testid="text-final-reputation" className="metric-value ink mt-1 font-display text-xl font-bold">{reputation}/100</div></div><div className="surface-yellow col-span-2 rounded-2xl p-4 sm:col-span-1"><BadgeCheck className="yellow h-4 w-4" /><div className="label mt-3">Kombo tertinggi</div><div className="ink mt-1 font-display text-xl font-bold">{bestStreak} langkah</div></div></div><div className="reward-shelf rounded-2xl border p-4"><div className="mb-3 flex items-center justify-between"><div className="mint flex items-center gap-2 text-[12px] font-bold"><Medal className="h-3.5 w-3.5" /> Rak hadiah</div><span className="label">{rewards.length}/5 terkumpul</span></div><div className="grid gap-2 sm:grid-cols-2">{rewards.map((reward) => { const RewardIcon = reward.icon; return <div key={reward.id} data-testid={`reward-${reward.id}`} className="reward-shelf-item flex items-center gap-3 rounded-xl px-3 py-2"><div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg"><RewardIcon className="h-4 w-4" /></div><div><div className="font-display text-sm font-bold">{reward.title}</div><div className="muted-ink text-[10px]">{reward.detail}</div></div></div>; })}</div></div>
+      <div className="mt-4 rounded-2xl border border-[var(--line)] bg-white p-4"><div className="flex items-center gap-2 text-[12px] font-bold"><Star className="mint h-3.5 w-3.5" /> Jejak per level</div><div className="mt-3 grid gap-2">{logs.map((log) => { const opt = optionsByRound[log.round].find((o) => o.id === log.optionId); const lnet = (opt?.profit ?? 0) - (opt?.cost ?? 0); const wasBest = log.optionId === bestChoice[log.round].id; const bestOpt = optionsByRound[log.round].find((o) => o.id === bestChoice[log.round].id)!; const pct = opt ? idealPct(log.round, opt, log.challenge.success) : 0; return <div key={log.round} className={`rounded-xl border px-3 py-2.5 ${wasBest ? 'border-[#49b9aa] bg-[#eefcf9]' : 'border-[var(--line)] bg-[#f7fbff]'}`}><div className="flex items-center justify-between gap-2"><span className="text-[13px] font-bold">Lv{log.round} · {opt?.title}</span><span className={`text-[12px] font-bold ${lnet >= 0 ? 'mint' : 'text-[#c64368]'}`}>{lnet >= 0 ? `+${rupiah(lnet)}` : `−${rupiah(-lnet)}`}</span></div>{log.actionNote && <p className="muted-ink mt-0.5 text-[12px] leading-snug">“{log.actionNote}”</p>}<p className="mt-0.5 text-[12px] font-semibold">{wasBest ? `${pct}% · Pilihan tepat.` : `${pct}% — seharusnya ${bestOpt.title}.`}</p></div>; })}</div></div>
       <div className="surface-mint mt-4 rounded-2xl p-4"><div className="mint flex items-center gap-2 text-[12px] font-bold"><Star className="h-3.5 w-3.5" /> Catatan untuk presentasi</div><p className="muted-ink mt-2 text-sm leading-relaxed">Kamu tidak cuma memilih profit terbesar. Kamu membaca tarik-ulur antara modal, kapasitas, stok, kualitas, dan reputasi di setiap level.</p></div><button data-testid="button-share-result" onClick={share} className="share-button mt-5 flex w-full items-center justify-center gap-2 rounded-xl border px-4 py-3 text-[12px] font-bold transition"><Sparkles className="h-4 w-4" /> {shareText}</button></section></div><footer className="muted-ink label border-t border-[var(--line)] pt-5 text-center">Jelly Rush · dibuat untuk manajer yang mau mencoba</footer></div></main>;
 }
 
